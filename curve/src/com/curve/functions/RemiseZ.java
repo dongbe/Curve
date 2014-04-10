@@ -1,3 +1,7 @@
+package com.curve.functions;
+
+import com.curve.ui.DessinFrame;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 

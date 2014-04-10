@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package com.curve.ui;
+import com.curve.functions.RemiseZ;
 
 import javax.swing.*;
 
