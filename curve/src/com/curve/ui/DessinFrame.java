@@ -32,11 +32,12 @@ public class DessinFrame extends JPanel {
     private States keyState;
 
     public DessinFrame(){
-        espace = new JPanel();
+        setLayout(new BorderLayout());
         keyState=States.rien;
         points=new Vector<Point>();
         MenuBar m = new MenuBar(this);
-        add(m);
+        add(m, BorderLayout.NORTH);
+       // add(new StateBar(), BorderLayout.SOUTH);
         setPreferredSize(new Dimension(400,400));
         MyListener mia=new MyListener();
         addMouseListener(mia);
@@ -59,10 +60,13 @@ public class DessinFrame extends JPanel {
         g2.setColor(Color.BLACK);
         int index=0;
         for(Point p:points){
-           g2.fillRect(p.x, p.y, 5, 5);
+            g2.fillRect(p.x, p.y, 5, 5);
             index=points.indexOf(p);
             if(index!=0){
                 g2.drawLine(points.get(index - 1).x, points.get(index - 1).y, p.x, p.y);
+            }
+            if(keyState==States.echap){
+                g2.drawRect(p.x,p.y,10, 10);
             }
         }
     }
@@ -76,6 +80,7 @@ public class DessinFrame extends JPanel {
 
         public void mouseDragged(MouseEvent e) {
 
+            //machine a etat
             switch(state){
                 case gauche:
                     state=States.gauchedragged; break;
@@ -96,15 +101,16 @@ public class DessinFrame extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
+
             if (e.getButton() == MouseEvent.BUTTON1) {
                 if(keyState.equals(States.echap)){
-                   state=States.editable;//bouton gauche pres
-                   for(Point p: points){
-                       if(abs(e.getX()-p.x)<10 && abs(e.getY()-p.y)<10){
-                           selected=p;
-                           System.out.println(p+"selected :"+selected+"point x:"+e.getX()+"point y :"+e.getY());
-                       }
-                   }
+                    state=States.editable;//bouton gauche pres
+                    for(Point p: points){
+                        if(abs(e.getX()-p.x)<10 && abs(e.getY()-p.y)<10){
+                            selected=p;
+                            System.out.println(p+"selected :"+selected+"point x:"+e.getX()+"point y :"+e.getY());
+                        }
+                    }
                 }else {
                     state=States.gauche;//bouton gauche pressé
                     //p0=e.getPoint();
@@ -126,6 +132,7 @@ public class DessinFrame extends JPanel {
                     break;
                 case editable:
                     repaint();
+
                     break;
             }
         }

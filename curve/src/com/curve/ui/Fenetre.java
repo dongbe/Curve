@@ -37,6 +37,7 @@ public class Fenetre extends JFrame {
                     }
                 }else{
                     dessinFrame.setKeyState(DessinFrame.States.rien);
+                    repaint();
                 }
             }
 
