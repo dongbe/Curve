@@ -26,16 +26,20 @@ public class Fenetre extends JFrame {
         pack();
     }
     class MyKeyListener extends KeyAdapter {
-        public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            if(dessinFrame.getKeyState()!=DessinFrame.States.echap){
-                dessinFrame.setKeyState(DessinFrame.States.echap);
-                for(Point p: dessinFrame.getPoints()){
-                    e.getComponent().getGraphics().drawRect(p.x,p.y,10, 10);
+        public void keyPressed(KeyEvent e) {
+            super.keyPressed(e);
+
+            if(e.getKeyCode()==e.VK_ESCAPE){
+                if(dessinFrame.getKeyState()!=DessinFrame.States.echap){
+                    dessinFrame.setKeyState(DessinFrame.States.echap);
+                    for(Point p: dessinFrame.getPoints()){
+                        e.getComponent().getGraphics().drawRect(p.x,p.y,10, 10);
+                    }
+                }else{
+                    dessinFrame.setKeyState(DessinFrame.States.rien);
                 }
-            }else{
-                dessinFrame.setKeyState(DessinFrame.States.rien);
             }
+
         }
     }
 }

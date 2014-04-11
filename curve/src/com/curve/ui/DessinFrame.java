@@ -56,7 +56,15 @@ public class DessinFrame extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         // background
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.BLACK);
+        int index=0;
+        for(Point p:points){
+           g2.fillRect(p.x, p.y, 5, 5);
+            index=points.indexOf(p);
+            if(index!=0){
+                g2.drawLine(points.get(index - 1).x, points.get(index - 1).y, p.x, p.y);
+            }
+        }
     }
 
     class MyListener extends MouseInputAdapter {
@@ -117,16 +125,7 @@ public class DessinFrame extends JPanel {
                     points.add(new Point(x,y));
                     break;
                 case editable:
-
-                    setPoints(test);
-                    int index=0;
-                    for(Point p:points){
-                        e.getComponent().getGraphics().fillRect(p.x,p.y,5,5);
-                        index=points.indexOf(p);
-                        if(index!=0){
-                            e.getComponent().getGraphics().drawLine(points.get(index-1).x,points.get(index-1).y,p.x,p.y);
-                        }
-                    }
+                    repaint();
                     break;
             }
         }
