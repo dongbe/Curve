@@ -5,6 +5,7 @@ import com.curve.ui.DessinFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.geom.CubicCurve2D;
 import java.util.Vector;
 
 /**
@@ -29,5 +30,6 @@ public class RemiseZ extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         dessinFrame.repaint();
         dessinFrame.setPoints(new Vector<Point>());
+        dessinFrame.setCurves(new Vector<CubicCurve2D>());
     }
 }
