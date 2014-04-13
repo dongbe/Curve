@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 public class TraceCourbe extends CubicCurve2D {
 
     Point p1,p2,ctrlp1,ctrlp2;
+
     public TraceCourbe(Point p1, Point p2, DessinFrame d){
 
         this.p1=p1;
@@ -208,6 +209,13 @@ public class TraceCourbe extends CubicCurve2D {
         ctrlp2.x= (int) ctrlx2;
         ctrlp2.y= (int) ctrly2;
 
+    }
+    public void setCtrlp1(Point ctrlp1) {
+        this.ctrlp1 = ctrlp1;
+    }
+
+    public void setCtrlp2(Point ctrlp2) {
+        this.ctrlp2 = ctrlp2;
     }
 
     /**

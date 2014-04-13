@@ -18,7 +18,7 @@ public class DessinFrame extends JPanel {
 
     public enum States {
         //les differents états pour la gestion des evenements de la souris
-        rien,gauche, milieu, droite, droitedragged, gauchedragged, echap, editable
+        rien,gauche, tangente, controldragged, control, gauchedragged, echap, editable
     }
     private JPanel espace;
 
@@ -127,14 +127,19 @@ public class DessinFrame extends JPanel {
     class MyListener extends MouseInputAdapter {
         int x = 0;
         int y = 0;
+        String type;
+        CubicCurve2D select;
         Point p0, p1, selected;
-        States state=States.rien;
+        States state=States.rien,previous=States.rien;
 
         public void mouseDragged(MouseEvent e) {
 
             //machine a etat
             switch(state){
-                case gauche:
+                case control:
+                    state=States.controldragged;
+                    break;
+                case tangente:
                     for(Point p: points){
                         if(abs(p.x-x)<5 && abs(p.y-y)<5){
                             state=States.gauchedragged;
@@ -154,6 +159,11 @@ public class DessinFrame extends JPanel {
                     p1=e.getPoint();
                     //e.getComponent().getGraphics().drawLine(x,y,e.getX(),e.getY());
                     break;
+                case controldragged:
+                    p1=e.getPoint();
+
+                    System.out.println(type);
+                    break;
             }
         }
 
@@ -166,21 +176,51 @@ public class DessinFrame extends JPanel {
                     for(Point p: points){
                         if(abs(e.getX()-p.x)<10 && abs(e.getY()-p.y)<10){
                             selected=p;
-                            System.out.println(p+"selected :"+selected+"point x:"+e.getX()+"point y :"+e.getY());
+                       //     System.out.println(p+"selected :"+selected+"point x:"+e.getX()+"point y :"+e.getY());
                         }
                     }
                 }else {
-                    state=States.gauche;//bouton gauche pressé
+                    //bouton gauche pressé
                     p0=e.getPoint();
                     x=e.getX();
                     y=e.getY();
+                    state=States.gauche;
+                    for(Point p: points){
+                        if(abs(p.x-x)<5 && abs(p.y-y)<5){
+                            state=States.tangente;
+                        }
+                    }
+                    for(Point p: curvepoints){
+                        if(abs(p.x-x)<5 && abs(p.y-y)<5){
+                            state=States.control;
+                            for(CubicCurve2D c: curves){
+                                if(c.getCtrlP1()==p){
+                                    type="ctrl1";
+                                    select=c;
+                                }else if(c.getCtrlP2()==p){
+                                    type="ctrl2";
+                                    select=c;
+                                }
+                            }
+                            System.out.println(type+" "+select);
+                        }
+                    }
+                    System.out.println(state);
                 }
             }
+
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
             switch(state){
+                case tangente:
+                    for(Point p:curvepoints){
+                        //repaint();
+                        e.getComponent().getGraphics().fillRect(p.x,p.y,5,5);
+                        //e.getComponent().getGraphics().setColor(Color.RED);
+                    }
+                    break;
                 case gauche:
                     e.getComponent().getGraphics().fillRect(x,y,5,5);
                     if(points.size()!=0){
@@ -191,18 +231,43 @@ public class DessinFrame extends JPanel {
                     break;
                 case editable:
                     repaint();
-
                     break;
                 case gauchedragged:
-
                     e.getComponent().getGraphics().fillRect(p1.x,p1.y,5,5);
                     TraceCourbe t = new TraceCourbe(p0,p1, (DessinFrame) e.getComponent());
                     curves.addElement(t);
                     points.addElement(p1);
                     repaint();break;
-                    //g2.draw(t);
+                case controldragged:
+                    if(type.compareTo("ctrl1")==0){
+                        //select.set
+                        select.setCurve(select.getX1(),select.getY1(),p1.getX(),p1.getY(),select.getCtrlX2(),
+                                select.getCtrlY2(),select.getX2(),select.getY2());
+                    }else{
+                        select.setCurve(select.getX1(),select.getY1(),select.getCtrlX1(),select.getCtrlY1(),p1.getX(),p1.getY()
+                                ,select.getX2(),select.getY2());
+                    }
+                    //repaint();
+                    break;
             }
         }
+
+        @Override
+        public void mouseMoved(MouseEvent e){
+            Boolean onCrtl=false;
+            Point pt=e.getPoint();
+            for(Point p:curvepoints){
+                if(abs(p.x-pt.x)<5 && abs(p.y-pt.y)<5){
+                   onCrtl=true;
+                }
+            }
+            if(onCrtl){
+                setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }else{
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+        }
+
 
     }
 
