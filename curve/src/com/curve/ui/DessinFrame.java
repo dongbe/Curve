@@ -153,6 +153,7 @@ public class DessinFrame extends JPanel {
                             p.y=e.getY();
                         }
                     }
+                    repaint();
                     break;
                 case gauchedragged:
                     p1=e.getPoint();
