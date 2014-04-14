@@ -20,7 +20,6 @@ public class DessinFrame extends JPanel {
         //les differents états pour la gestion des evenements de la souris
         rien,gauche, tangente, controldragged, control, gauchedragged, echap, editable
     }
-    private JPanel espace;
 
     private Vector<Point> points;
 
@@ -96,7 +95,7 @@ public class DessinFrame extends JPanel {
                 }
             }
             //System.out.println(exist);
-            if(index!=0 && exist==false){
+            if(index!=0 && !exist){
                 g2.drawLine(points.get(index - 1).x, points.get(index - 1).y, p.x, p.y);
             }
             if(keyState==States.echap){
@@ -130,7 +129,7 @@ public class DessinFrame extends JPanel {
         String type;
         CubicCurve2D select;
         Point p0, p1, selected;
-        States state=States.rien,previous=States.rien;
+        States state=States.rien;
 
         public void mouseDragged(MouseEvent e) {
 
@@ -195,7 +194,7 @@ public class DessinFrame extends JPanel {
                                 t=true;
                             }
                         }
-                        if(abs(p.x-x)<5 && abs(p.y-y)<5 && t==false){
+                        if(abs(p.x-x)<5 && abs(p.y-y)<5 && !t){
                             state=States.control;
                             for(CubicCurve2D c: curves){
                                 if(c.getCtrlP1()==p){
@@ -267,7 +266,7 @@ public class DessinFrame extends JPanel {
                         exist=true;
                     }
                 }
-                if(abs(p.x-pt.x)<5 && abs(p.y-pt.y)<5 && exist!=true){
+                if(abs(p.x-pt.x)<5 && abs(p.y-pt.y)<5 && !exist){
                    onCrtl=true;
                 }
             }
