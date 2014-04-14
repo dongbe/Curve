@@ -161,8 +161,6 @@ public class DessinFrame extends JPanel {
                     break;
                 case controldragged:
                     p1=e.getPoint();
-
-                    System.out.println(type);
                     break;
             }
         }
@@ -190,8 +188,14 @@ public class DessinFrame extends JPanel {
                             state=States.tangente;
                         }
                     }
+                    boolean t=false;
                     for(Point p: curvepoints){
-                        if(abs(p.x-x)<5 && abs(p.y-y)<5){
+                        for(Point pt: points){
+                            if(p==pt){
+                                t=true;
+                            }
+                        }
+                        if(abs(p.x-x)<5 && abs(p.y-y)<5 && t==false){
                             state=States.control;
                             for(CubicCurve2D c: curves){
                                 if(c.getCtrlP1()==p){
@@ -247,7 +251,7 @@ public class DessinFrame extends JPanel {
                         select.setCurve(select.getX1(),select.getY1(),select.getCtrlX1(),select.getCtrlY1(),p1.getX(),p1.getY()
                                 ,select.getX2(),select.getY2());
                     }
-                    //repaint();
+                    repaint();
                     break;
             }
         }
@@ -255,12 +259,19 @@ public class DessinFrame extends JPanel {
         @Override
         public void mouseMoved(MouseEvent e){
             Boolean onCrtl=false;
+            Boolean exist=false;
             Point pt=e.getPoint();
             for(Point p:curvepoints){
-                if(abs(p.x-pt.x)<5 && abs(p.y-pt.y)<5){
+                for(Point cp: points){
+                    if (p==cp){
+                        exist=true;
+                    }
+                }
+                if(abs(p.x-pt.x)<5 && abs(p.y-pt.y)<5 && exist!=true){
                    onCrtl=true;
                 }
             }
+            System.out.println(onCrtl);
             if(onCrtl){
                 setCursor(new Cursor(Cursor.HAND_CURSOR));
             }else{
